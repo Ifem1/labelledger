@@ -1,13 +1,13 @@
 import { ExecutionResult, TransactionStatus } from "genlayer-js/types";
+import type { Hash } from "genlayer-js/types";
 import { readClient } from "./client";
 
-export async function waitForSuccessfulFinalization(hash: `0x${string}`, onFinalized?: () => void) {
+export async function waitForSuccessfulFinalization(hash: Hash, onFinalized?: () => void) {
   const receipt = await readClient.waitForTransactionReceipt({
     hash,
     status: TransactionStatus.FINALIZED,
     interval: 5_000,
     retries: 90,
-    fullTransaction: false,
   });
 
   onFinalized?.();

@@ -116,7 +116,7 @@ export function useEpochs(datasetId: number, epochCount: number) {
       const count = Math.min(epochCount, 50);
       setState({ data: await Promise.all(Array.from({ length: count }, (_, index) => readEpoch(index + 1))), loading: false, error: "" });
     } catch (error) { setState({ data: [], loading: false, error: error instanceof Error ? error.message : "Epoch read failed." }); }
-  }, [datasetId, epochCount]);
+  }, [epochCount]);
   useEffect(() => { void reload(); }, [reload]);
   return { ...state, reload };
 }

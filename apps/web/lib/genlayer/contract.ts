@@ -1,6 +1,7 @@
 import { CONTRACT_ADDRESS, EXPECTED_CHAIN_HEX, hasContract } from "./config";
 import { makeWriteClient, readClient } from "./client";
 import { waitForSuccessfulFinalization } from "./execution";
+import type { CalldataEncodable, Hash } from "genlayer-js/types";
 import type { CaseRecord, DatasetRecord, EpochRecord, PrecedentRecord } from "../types";
 
 function requireContract(): `0x${string}` {
@@ -56,8 +57,8 @@ export async function readPrecedents(caseId: number, k = 6): Promise<PrecedentRe
 export async function writeContract(
   address: `0x${string}`,
   functionName: string,
-  args: readonly unknown[],
-  onLifecycle?: (stage: "submitted" | "finalizing" | "checking-execution", hash: `0x${string}`) => void,
+  args: readonly CalldataEncodable[],
+  onLifecycle?: (stage: "submitted" | "finalizing" | "checking-execution", hash: Hash) => void,
 ) {
   if (typeof window === "undefined" || !window.ethereum) throw new Error("Injected wallet unavailable.");
   const chainId = String(await window.ethereum.request({ method: "eth_chainId" })).toLowerCase();
@@ -68,7 +69,8 @@ export async function writeContract(
   const account = accounts?.[0] as `0x${string}` | undefined;
   if (!account) throw new Error("Wallet is not connected.");
   const client = makeWriteClient(account);
-  const hash = await client.writeContract({ address, functionName, args: [...args], value: 0n });
+  const calldata: CalldataEncodable[] = [...args];
+  const hash = await client.writeContract({ address, functionName, args: calldata, value: 0n });
   onLifecycle?.("submitted", hash);
   onLifecycle?.("finalizing", hash);
   await waitForSuccessfulFinalization(hash, () => onLifecycle?.("checking-execution", hash));
@@ -77,8 +79,8 @@ export async function writeContract(
 
 export async function sendLabelLedgerWrite(
   functionName: string,
-  args: readonly unknown[],
-  onLifecycle?: (stage: "submitted" | "finalizing" | "checking-execution", hash: `0x${string}`) => void,
+  args: readonly CalldataEncodable[],
+  onLifecycle?: (stage: "submitted" | "finalizing" | "checking-execution", hash: Hash) => void,
 ) {
   return writeContract(requireContract(), functionName, args, onLifecycle);
 }

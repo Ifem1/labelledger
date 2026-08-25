@@ -3,12 +3,13 @@
 import { useCallback, useState } from "react";
 import { DATA_MODE } from "./genlayer/config";
 import { sendLabelLedgerWrite } from "./genlayer/contract";
+import type { CalldataEncodable } from "genlayer-js/types";
 import type { TxState } from "./types";
 
 export function useTrackedWrite() {
   const [tx, setTx] = useState<TxState>({ stage: "idle" });
 
-  const run = useCallback(async (functionName: string, args: readonly unknown[], after?: () => Promise<void> | void) => {
+  const run = useCallback(async (functionName: string, args: readonly CalldataEncodable[], after?: () => Promise<void> | void) => {
     if (DATA_MODE === "fixture") {
       setTx({ stage: "failure", message: "Fixture mode is read/demo-only. Switch to live mode with a deployed contract for writes." });
       return false;
