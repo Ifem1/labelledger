@@ -38,8 +38,8 @@ export default function AnnotatePage({ params }: { params: Promise<{ id: string 
   return (
     <div className="page">
       <header className="page-header">
-        <div><div className="eyebrow">DATASET {datasetId} / BROWSER-LOCAL WORK PLANE</div><h1>Annotation workbench</h1><p>{dataset.data.name} · routine labels here are convenience state, not chain truth.</p></div>
-        <div className="button-row"><Link className="quiet-button" href={`/datasets/${datasetId}/disagreements`}>VIEW DISAGREEMENTS →</Link></div>
+        <div><div className="eyebrow">Routine annotation</div><h1>Annotation workbench</h1><p>{dataset.data.name} · routine labels here are convenience state, not chain truth.</p></div>
+        <div className="button-row"><span className="status-tag">LOCAL ONLY · NO TRANSACTION</span><Link className="quiet-button" href={`/datasets/${datasetId}/disagreements`}>View Disputes →</Link></div>
       </header>
       <div className="annotation-layout">
         <aside className="queue">
@@ -65,7 +65,7 @@ export default function AnnotatePage({ params }: { params: Promise<{ id: string 
           <div className="section-head"><span>LABEL RAIL</span><span>KEYBOARD 1–{labels.length}</span></div>
           {labels.map((label, labelIndex) => (
             <button key={label.id} className={`label-option ${selected === label.id ? "selected" : ""}`} onClick={() => setSelected(label.id)}>
-              <span className="label-code">{label.id}<span className="shortcut">{labelIndex + 1}</span></span>
+              <span className="label-name">{label.name}<span className="shortcut">{labelIndex + 1}</span></span><span className="label-code">{label.id}</span>
               <span className="label-definition">{label.definition}</span>
             </button>
           ))}

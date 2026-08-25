@@ -10,7 +10,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const match = pathname.match(/\/datasets\/(\d+)/);
   const caseMatch = pathname.match(/\/cases\/(\d+)/);
-  const datasetId = match?.[1] ?? (caseMatch ? "1" : "");
+  const datasetId = match?.[1] ?? (caseMatch ? "" : "");
   const nav = datasetId ? [
     ["Overview", `/datasets/${datasetId}`],
     ["Annotate", `/datasets/${datasetId}/annotate`],

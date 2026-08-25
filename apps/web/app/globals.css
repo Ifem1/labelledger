@@ -118,6 +118,10 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .dataset-table th { color: var(--muted); font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; background: #111519; position: sticky; top: 96px; }
 .dataset-row:hover td { background: #1a2025; }
 .dataset-name { font-weight: 600; }
+.case-excerpt { max-width: 340px; }
+.local-section { border-top: 1px solid var(--line); }
+.authoritative-section { background: var(--graphite); }
+.label-name { font-weight: 600; }
 .numeric { text-align: right !important; font-family: "IBM Plex Mono", monospace; }
 .status-tag { display: inline-flex; border: 1px solid var(--line); padding: 3px 6px; border-radius: 2px; font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .05em; }
 .status-resolved { border-color: #657624; color: var(--signal); }
@@ -251,8 +255,13 @@ button:disabled { cursor: not-allowed; opacity: .45; }
   .queue { border-right: 0; max-height: 160px; overflow: auto; border-bottom: 1px solid var(--line); }
   .sample-copy { padding: 28px 20px; font-size: 20px; }
   .label-rail { display: block; }
-  .dataset-table { min-width: 780px; }
-  .table-scroll { overflow-x: auto; }
+  .dataset-table, .dataset-table tbody, .dataset-table tr, .dataset-table td { display: block; width: 100%; }
+  .dataset-table thead { display: none; }
+  .dataset-table tr { padding: 16px; border-bottom: 1px solid var(--line); }
+  .dataset-table td { border: 0; padding: 3px 0; text-align: left !important; }
+  .dataset-table td.numeric { display: inline-block; width: auto; margin-right: 18px; }
+  .dataset-table td:last-child { margin-top: 10px; }
+  .table-scroll { overflow-x: hidden; }
   .diff-grid, .ledger-grid { grid-template-columns: 1fr; }
   .diff-pane + .diff-pane, .ledger-grid > * + * { border-left: 0; border-top: 1px solid var(--line); }
   .case-meta { grid-template-columns: 1fr; }

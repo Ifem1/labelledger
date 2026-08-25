@@ -4,7 +4,9 @@
 
 LabelLedger is a GenLayer contract + frontend product for classification boundaries that ordinary annotators cannot settle confidently. Routine, high-volume annotation remains browser-local. A disputed public sample is bounded and hashed in the browser, escalated through an injected wallet, resolved under the rubric version captured when the case opened, and—only after a canonical resolution—inserted into contract-owned semantic memory as precedent.
 
-> **Deployment status:** the contract is deployed and verified on StudioNet; see [`DEPLOYMENT.md`](DEPLOYMENT.md). A hosted frontend and hosted-wallet write are not yet claimed. The project intentionally has no backend, database, server signer, API service, Worker, D1, R2, or object store.
+> **Live App:** [labelledge.vercel.app](https://labelledge.vercel.app/) · **StudioNet contract:** [`0xd26FF21A97DF6E32AA18eb72e0af6e902b482F28`](https://explorer-studio.genlayer.com/address/0xd26FF21A97DF6E32AA18eb72e0af6e902b482F28) · **Source:** [`1037d5d`](https://github.com/Ifem1/labelledger/commit/1037d5dbe18e497ab01b850151bb2c3a2a3a7c40) · **CI:** GitHub Actions
+
+The project intentionally has no backend, database, server signer, API service, Worker, D1, R2, or object store.
 
 ## Why GenLayer is load-bearing
 
@@ -93,10 +95,10 @@ The Next.js application is in [`apps/web`](apps/web). It follows a dense annotat
 Routes:
 
 ```text
-/                                  dataset switchboard
+/                                  dataset overview list
 /datasets/[id]/annotate            browser-local annotation workbench
 /datasets/[id]/disagreements       disagreement inbox + escalation
-/cases/[caseId]                    GenLayer adjudication + precedent filmstrip
+/cases/[caseId]                    GenLayer adjudication + related precedent
 /datasets/[id]/rubric              versioned rubric editor/diff
 /datasets/[id]/epochs              epoch manifests
 /datasets/[id]/contributors        local activity ledger
