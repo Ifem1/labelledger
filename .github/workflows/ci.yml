@@ -1,0 +1,45 @@
+name: LabelLedger CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install contract tooling
+        run: pip install -r requirements.txt
+      - name: Python syntax
+        run: python -m py_compile contracts/labelledger.py
+      - name: Direct tests
+        run: pytest -q tests/direct
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Production build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_GENLAYER_CHAIN: studionet
+          NEXT_PUBLIC_GENLAYER_ENDPOINT: https://studio.genlayer.com/api
+          NEXT_PUBLIC_LABELLEDGER_CONTRACT: ""
+          NEXT_PUBLIC_LABELLEDGER_DATA: fixture

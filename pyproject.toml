@@ -1,0 +1,11 @@
+[project]
+name = "labelledger"
+version = "0.1.0"
+description = "Precedent-aware settlement for ambiguous AI dataset labels on GenLayer"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+markers = ["integration: opt-in live StudioNet verification tests"]
