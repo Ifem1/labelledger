@@ -1,0 +1,7 @@
+{
+  "name": "labelledger",
+  "private": true,
+  "dependencies": {
+    "next": "16.3.2"
+  }
+}
