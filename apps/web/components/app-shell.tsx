@@ -12,12 +12,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const caseMatch = pathname.match(/\/cases\/(\d+)/);
   const datasetId = match?.[1] ?? (caseMatch ? "1" : "");
   const nav = datasetId ? [
-    ["ANNOTATE", `/datasets/${datasetId}/annotate`],
-    ["DISAGREEMENTS", `/datasets/${datasetId}/disagreements`],
-    ["RUBRIC", `/datasets/${datasetId}/rubric`],
-    ["EPOCHS", `/datasets/${datasetId}/epochs`],
-    ["CONTRIBUTORS", `/datasets/${datasetId}/contributors`],
-    ["EXPORT", `/datasets/${datasetId}/export`],
+    ["Overview", `/datasets/${datasetId}`],
+    ["Annotate", `/datasets/${datasetId}/annotate`],
+    ["Disputes", `/datasets/${datasetId}/disagreements`],
+    ["Rubric", `/datasets/${datasetId}/rubric`],
+    ["History", `/datasets/${datasetId}/epochs`],
+    ["More", `/datasets/${datasetId}/contributors`],
   ] : [];
 
   return (
@@ -25,13 +25,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <header className="topbar">
         <div className="brand-block">
           <Link href="/" className="brand">LABELLEDGER</Link>
-          <span className="brand-sub">PRECEDENT-AWARE LABEL SETTLEMENT</span>
+          <span className="brand-sub">Resolve ambiguous dataset labels with GenLayer precedent</span>
         </div>
         <div className="provenance">
           <span className={`status-dot ${DATA_MODE === "live" ? "status-live" : "status-fixture"}`} />
-          <span>{DATA_MODE.toUpperCase()}</span>
+          <span>{DATA_MODE === "live" ? "Live" : "Fixture"}</span>
           <span className="rule" />
-          <span>STUDIONET / {EXPECTED_CHAIN_ID}</span>
+          <span>StudioNet <small className="mono muted">({EXPECTED_CHAIN_ID})</small></span>
           {DATA_MODE === "live" && !hasContract && <span className="warning-text">CONTRACT UNSET</span>}
         </div>
         <div className="wallet-utility">
