@@ -4,7 +4,7 @@
 
 LabelLedger is a GenLayer contract + frontend product for classification boundaries that ordinary annotators cannot settle confidently. Routine, high-volume annotation remains browser-local. A disputed public sample is bounded and hashed in the browser, escalated through an injected wallet, resolved under the rubric version captured when the case opened, and—only after a canonical resolution—inserted into contract-owned semantic memory as precedent.
 
-> **Deployment status:** source implementation complete in this repository; StudioNet deployment and hosted frontend proof are **not yet claimed**. The project intentionally has no backend, database, server signer, API service, Worker, D1, R2, or object store.
+> **Deployment status:** the contract is deployed and verified on StudioNet; see [`DEPLOYMENT.md`](DEPLOYMENT.md). A hosted frontend and hosted-wallet write are not yet claimed. The project intentionally has no backend, database, server signer, API service, Worker, D1, R2, or object store.
 
 ## Why GenLayer is load-bearing
 
@@ -155,3 +155,5 @@ For live mode, set `NEXT_PUBLIC_LABELLEDGER_CONTRACT` to the verified StudioNet 
 This repository does **not** use a generated/local/server private key to claim a live deployment. StudioNet deployment and the first hosted-wallet transaction require the owner's injected wallet and must be recorded only after the finalized transaction has an explicitly successful GenVM execution result.
 
 See [`handoff.md`](handoff.md) and [`memory.md`](memory.md) for current factual status and release blockers.
+
+Live contract and lifecycle evidence are recorded in [`DEPLOYMENT.md`](DEPLOYMENT.md). The canonical deployed contract source is commit `1037d5dbe18e497ab01b850151bb2c3a2a3a7c40`.
