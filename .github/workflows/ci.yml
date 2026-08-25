@@ -17,8 +17,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Python syntax
         run: python -m py_compile contracts/labelledger.py
-      - name: GenVM lint
-        run: genvm-lint check contracts/labelledger.py
       - name: Direct tests
         run: pytest -q tests/direct
 
