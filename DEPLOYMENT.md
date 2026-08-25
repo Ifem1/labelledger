@@ -35,4 +35,4 @@ The deployment receipt was independently queried at FINALIZED and reported empty
 | Rubric v2 update | Not performed; Dataset 2 remains v1 |
 | Epoch seal | Epoch 1 independently verified; transaction hash not captured |
 
-No hosted frontend deployment or hosted-wallet write is claimed in this document.
+The hosted frontend is [labelledge.vercel.app](https://labelledge.vercel.app/), configured for live StudioNet reads. No hosted-wallet write is claimed in this document.
