@@ -6,7 +6,7 @@ import { TxRail } from "@/components/tx-rail";
 import { useWallet } from "@/components/wallet-provider";
 import { sha256Text } from "@/lib/canonical";
 import { DATA_MODE } from "@/lib/genlayer/config";
-import { readDataset } from "@/lib/genlayer/contract";
+import { readCaseIds } from "@/lib/genlayer/contract";
 import { useCases, useDataset } from "@/lib/use-data";
 import { useLocalWorkspace } from "@/lib/workbench-store";
 import { useTrackedWrite } from "@/lib/use-tx";
@@ -31,12 +31,13 @@ export default function DisagreementsPage({ params }: { params: Promise<{ id: st
     setActive(sample.id);
     const digest = await sha256Text(sample.text.trim());
     const disagreement = JSON.stringify({ votes: sample.votes, note: sample.note });
-    let nextCaseId = 0;
+    const before = new Set(await readCaseIds(datasetId));
     await run("open_case", [BigInt(datasetId), `browser:${sample.id}`, digest, sample.text.trim(), disagreement], async () => {
-      const refreshed = await readDataset(datasetId);
-      nextCaseId = refreshed.case_count;
-      workspace.markEscalated(sample.id, nextCaseId);
+      const after = await readCaseIds(datasetId);
+      const openedCaseId = after.find((caseId) => !before.has(caseId)) ?? after.at(-1);
+      if (openedCaseId) workspace.markEscalated(sample.id, openedCaseId);
       await dataset.reload();
+      await authoritative.reload();
     });
     setActive("");
   }

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DATA_MODE, hasContract } from "./genlayer/config";
 import { DEMO_CASES, DEMO_DATASET, DEMO_EPOCHS, DEMO_PRECEDENTS } from "./demo";
-import { readCase, readCaseIds, readDataset, readDatasetCount, readEpoch, readPrecedents } from "./genlayer/contract";
+import { readCase, readCaseIds, readDataset, readDatasetCount, readEpoch, readEpochIds, readPrecedents } from "./genlayer/contract";
 import type { CaseRecord, DatasetRecord, EpochRecord, PrecedentRecord } from "./types";
 
 export type LoadState<T> = { data: T; loading: boolean; error: string };
@@ -107,16 +107,16 @@ export function usePrecedents(caseId: number) {
   return { ...state, reload };
 }
 
-export function useEpochs(datasetId: number, epochCount: number) {
+export function useEpochs(datasetId: number) {
   const [state, setState] = useState<LoadState<EpochRecord[]>>({ data: [], loading: true, error: "" });
   const reload = useCallback(async () => {
     if (DATA_MODE === "fixture") { setState({ data: DEMO_EPOCHS, loading: false, error: "" }); return; }
     if (!hasContract) { setState({ data: [], loading: false, error: "No deployed contract address is configured." }); return; }
     try {
-      const count = Math.min(epochCount, 50);
-      setState({ data: await Promise.all(Array.from({ length: count }, (_, index) => readEpoch(index + 1))), loading: false, error: "" });
+      const ids = await readEpochIds(datasetId);
+      setState({ data: await Promise.all(ids.map(readEpoch)), loading: false, error: "" });
     } catch (error) { setState({ data: [], loading: false, error: error instanceof Error ? error.message : "Epoch read failed." }); }
-  }, [epochCount]);
+  }, [datasetId]);
   useEffect(() => { void reload(); }, [reload]);
   return { ...state, reload };
 }

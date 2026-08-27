@@ -11,7 +11,7 @@ import { useTrackedWrite } from "@/lib/use-tx";
 export default function EpochsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params); const datasetId = Number(id);
   const dataset = useDataset(datasetId); const cases = useCases(datasetId); const wallet = useWallet(); const { tx, run } = useTrackedWrite();
-  const epochs = useEpochs(datasetId, dataset.data?.epoch_count ?? 0);
+  const epochs = useEpochs(datasetId);
   const terminal = useMemo(() => cases.data.filter((item) => ["RESOLVED", "ABSTAINED", "VOIDED"].includes(item.status)), [cases.data]);
   const groups = useMemo(() => Object.entries(terminal.reduce<Record<string, number[]>>((acc, item) => { const key = String(item.rubric_version); (acc[key] ??= []).push(item.case_id); return acc; }, {})), [terminal]);
   const canWrite = DATA_MODE === "live" && wallet.connected && wallet.correctNetwork;

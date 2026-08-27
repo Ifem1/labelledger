@@ -36,6 +36,15 @@ export async function readEpoch(id: number): Promise<EpochRecord> {
   return parseResult<EpochRecord>(result);
 }
 
+export async function readEpochIds(datasetId: number, offset = 0, limit = 50): Promise<number[]> {
+  const result = await readClient.readContract({
+    address: requireContract(),
+    functionName: "list_epochs",
+    args: [BigInt(datasetId), offset, limit],
+  });
+  return (parseResult<unknown[]>(result) ?? []).map(Number);
+}
+
 export async function readCaseIds(datasetId: number, status = 0, offset = 0, limit = 50): Promise<number[]> {
   const result = await readClient.readContract({
     address: requireContract(),

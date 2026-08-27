@@ -291,3 +291,37 @@ def test_list_cases_filters_and_bounds_pagination(direct_vm, direct_deploy):
     assert contract.list_cases(1, 5, 0, 20) == [second]
     with direct_vm.expect_revert("pagination"):
         contract.list_cases(1, 0, 0, 51)
+
+
+def test_second_dataset_lists_actual_case_and_epoch_ids(direct_vm, direct_deploy):
+    contract = deploy(direct_deploy)
+    dataset_one = create_dataset(contract)
+    dataset_two = contract.create_dataset("Second intent set", RUBRIC_URL, RUBRIC_DIGEST, SCHEMA)
+
+    first_dataset_case = open_demo_case(contract, dataset_id=dataset_one)
+    second_dataset_case = open_demo_case(
+        contract,
+        dataset_id=dataset_two,
+        sample="the seller says complete but the paid service was never delivered",
+    )
+    contract.void_case(second_dataset_case, "terminal fixture")
+    second_dataset_epoch = contract.seal_epoch(
+        dataset_two,
+        "sha256:" + ("c" * 64),
+        "c" * 64,
+        json.dumps([second_dataset_case]),
+    )
+
+    assert first_dataset_case == 1
+    assert second_dataset_case == 2
+    assert contract.get_dataset(dataset_two)["case_count"] == 1
+    assert contract.list_cases(dataset_two, 0, 0, 20) == [second_dataset_case]
+
+    epoch = contract.get_epoch(second_dataset_epoch)
+    assert epoch["dataset_id"] == dataset_two
+    assert epoch["case_ids"] == [second_dataset_case]
+    assert contract.get_dataset(dataset_two)["epoch_count"] == 1
+    assert contract.list_epochs(dataset_two, 0, 20) == [second_dataset_epoch]
+    assert contract.list_epochs(dataset_one, 0, 20) == []
+    with direct_vm.expect_revert("pagination"):
+        contract.list_epochs(dataset_two, 0, 51)

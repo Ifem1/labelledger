@@ -174,6 +174,7 @@ class LabelLedger(gl.Contract):
     cases: TreeMap[u256, Case]
     epochs: TreeMap[u256, Epoch]
     dataset_cases: TreeMap[u256, DynArray[u256]]
+    dataset_epochs: TreeMap[u256, DynArray[u256]]
     next_dataset_id: u256
     next_case_id: u256
     next_epoch_id: u256
@@ -341,6 +342,7 @@ class LabelLedger(gl.Contract):
         epoch_id = self.next_epoch_id
         self.next_epoch_id = epoch_id + ONE
         self.epochs[epoch_id] = Epoch(dataset_id, u256(version if version is not None else 0), manifest_ref, digest, json.dumps(case_ids, separators=(",", ":")), self._now())
+        self.dataset_epochs.get_or_insert_default(dataset_id).append(epoch_id)
         dataset.epoch_count = dataset.epoch_count + ONE
         self.datasets[dataset_id] = dataset
         EpochSealed(epoch_id, dataset_id, rubric_version=str(version)).emit()
@@ -397,6 +399,21 @@ class LabelLedger(gl.Contract):
                 seen += 1
                 if len(result) == limit:
                     break
+            index += 1
+        return result
+
+    @gl.public.view
+    def list_epochs(self, dataset_id: u256, offset: int = 0, limit: int = 20) -> list:
+        self._dataset(dataset_id)
+        if offset < 0 or limit < 1 or limit > MAX_PAGE:
+            raise gl.vm.UserError("invalid pagination")
+        if dataset_id not in self.dataset_epochs:
+            return []
+        ids = self.dataset_epochs[dataset_id]
+        result = []
+        index = offset
+        while index < len(ids) and len(result) < limit:
+            result.append(int(ids[index]))
             index += 1
         return result
 
