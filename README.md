@@ -4,7 +4,7 @@
 
 LabelLedger is a GenLayer contract + frontend product for classification boundaries that ordinary annotators cannot settle confidently. Routine, high-volume annotation remains browser-local. A disputed public sample is bounded and hashed in the browser, escalated through an injected wallet, resolved under the rubric version captured when the case opened, and—only after a canonical resolution—inserted into contract-owned semantic memory as precedent.
 
-> **Live App:** [labelledge.vercel.app](https://labelledge.vercel.app/) · **StudioNet contract:** [`0xd26FF21A97DF6E32AA18eb72e0af6e902b482F28`](https://explorer-studio.genlayer.com/address/0xd26FF21A97DF6E32AA18eb72e0af6e902b482F28) · **Source:** [`1037d5d`](https://github.com/Ifem1/labelledger/commit/1037d5dbe18e497ab01b850151bb2c3a2a3a7c40) · **CI:** GitHub Actions
+> **Live App:** [labelledge.vercel.app](https://labelledge.vercel.app/) · **StudioNet contract:** [`0xa198C0a9F20faf982F2d8C2A635dF970d70d493A`](https://explorer-studio.genlayer.com/address/0xa198C0a9F20faf982F2d8C2A635dF970d70d493A) · **Deployed HEAD:** [`7b2f3b9`](https://github.com/Ifem1/labelledger/commit/7b2f3b9) · **CI:** GitHub Actions
 
 The project intentionally has no backend, database, server signer, API service, Worker, D1, R2, or object store.
 
@@ -154,8 +154,8 @@ For live mode, set `NEXT_PUBLIC_LABELLEDGER_CONTRACT` to the verified StudioNet 
 
 ## Verification truth
 
-This repository does **not** use a generated/local/server private key to claim a live deployment. StudioNet deployment and the first hosted-wallet transaction require the owner's injected wallet and must be recorded only after the finalized transaction has an explicitly successful GenVM execution result.
+The product has no backend or server signer; browser writes remain injected-wallet-only. The current StudioNet deployment was made with an owner-authorized, unlocked GenLayer CLI test account and is claimed only because its finalized receipt reports successful GenVM execution.
 
 See [`handoff.md`](handoff.md) and [`memory.md`](memory.md) for current factual status and release blockers.
 
-Live contract and lifecycle evidence are recorded in [`DEPLOYMENT.md`](DEPLOYMENT.md). The canonical deployed contract source is commit `1037d5dbe18e497ab01b850151bb2c3a2a3a7c40`.
+Live contract and lifecycle evidence are recorded in [`DEPLOYMENT.md`](DEPLOYMENT.md). The canonical deployment was made from repository HEAD `7b2f3b9`; `contracts/labelledger.py` was last changed in `19366f6`.
