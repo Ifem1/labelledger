@@ -82,8 +82,8 @@ export async function writeContract(
   const hash = await client.writeContract({ address, functionName, args: calldata, value: 0n });
   onLifecycle?.("submitted", hash);
   onLifecycle?.("finalizing", hash);
-  await waitForSuccessfulFinalization(hash, () => onLifecycle?.("checking-execution", hash));
-  return hash;
+  const execution = await waitForSuccessfulFinalization(hash, () => onLifecycle?.("checking-execution", hash));
+  return { hash, returnValue: execution.returnValue };
 }
 
 export async function sendLabelLedgerWrite(

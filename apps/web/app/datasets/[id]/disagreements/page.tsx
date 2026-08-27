@@ -6,7 +6,6 @@ import { TxRail } from "@/components/tx-rail";
 import { useWallet } from "@/components/wallet-provider";
 import { sha256Text } from "@/lib/canonical";
 import { DATA_MODE } from "@/lib/genlayer/config";
-import { readCaseIds } from "@/lib/genlayer/contract";
 import { useCases, useDataset } from "@/lib/use-data";
 import { useLocalWorkspace } from "@/lib/workbench-store";
 import { useTrackedWrite } from "@/lib/use-tx";
@@ -26,16 +25,16 @@ export default function DisagreementsPage({ params }: { params: Promise<{ id: st
   const labels = useMemo<LabelDefinition[]>(() => { try { return JSON.parse(dataset.data?.label_schema_json ?? "[]"); } catch { return []; } }, [dataset.data]);
   const canWrite = DATA_MODE === "live" && wallet.connected && wallet.correctNetwork;
   const statusName = (status: string) => status === "ESCALATED" ? "Awaiting review" : status === "ABSTAINED" ? "Abstained" : status === "VOIDED" ? "Voided" : status === "RESOLVED" ? "Resolved" : "Resolving";
+  const returnedId = (value: unknown) => typeof value === "bigint" ? Number(value) : typeof value === "number" ? value : 0;
 
   async function escalate(sample: LocalSample) {
     setActive(sample.id);
     const digest = await sha256Text(sample.text.trim());
     const disagreement = JSON.stringify({ votes: sample.votes, note: sample.note });
-    const before = new Set(await readCaseIds(datasetId));
-    await run("open_case", [BigInt(datasetId), `browser:${sample.id}`, digest, sample.text.trim(), disagreement], async () => {
-      const after = await readCaseIds(datasetId);
-      const openedCaseId = after.find((caseId) => !before.has(caseId)) ?? after.at(-1);
-      if (openedCaseId) workspace.markEscalated(sample.id, openedCaseId);
+    await run("open_case", [BigInt(datasetId), `browser:${sample.id}`, digest, sample.text.trim(), disagreement], async ({ returnValue }) => {
+      const openedCaseId = returnedId(returnValue);
+      if (!Number.isSafeInteger(openedCaseId) || openedCaseId < 1) throw new Error("open_case finalized without a numeric case ID return value.");
+      workspace.markEscalated(sample.id, openedCaseId);
       await dataset.reload();
       await authoritative.reload();
     });
